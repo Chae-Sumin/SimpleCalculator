@@ -1,0 +1,7 @@
+@charset "utf-8";
+#SimpleCalculator *{margin: 0; padding: 0; border: 0;}
+#SimpleCalculator>form{width: 100%; height: 100%; background: #ccc; padding: 10px;}
+#SimpleCalculator>form>input{width: 100%; height: 40px; padding: 5px 20px; background: #000; color: #fff; box-sizing: border-box; line-height: 30px; text-align: right; font-size: 20px;}
+#SimpleCalculator>form>input:first-of-type{height: 36px; font-size: 16px; line-height: 26px;}
+#SimpleCalculator>form>table{width: 100%; height: calc(100% - 90px); padding-top: 10px; border-spacing: 5px; table-layout: fixed;}
+#SimpleCalculator>form>table button{width: 100%; height: 100%; background: #eee;}
