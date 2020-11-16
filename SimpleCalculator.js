@@ -1,9 +1,10 @@
 function calculatorGenerate(id,width,height){ // 계산기 생성 함수
     let calFlag = false;
+    let calculatorStack = [];
+    let lastAns = null;
     const box = document.getElementById(id);
     const calForm = document.createElement("form");
     box.appendChild(calForm);
-    let calculatorStack = [];
     if(width != undefined) {box.style.width = width + 'px'}
     if(height != undefined) {box.style.height = height + 'px'}
     const display1 = createDisplay(); // input 생성
@@ -32,8 +33,8 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
     }
     function UpperDisplayAction(display){ //위의 디스플레이 설정
         if(calFlag) {return true;}
+        if(lastAns) {display.value = "ANS("+lastAns+")"; return true;}
         display.value = "";
-        console.log(calculatorStack);
         for(let i = 0; i<calculatorStack.length; i++){
             display.value = display.value + calculatorStack[i] + " ";
         }
@@ -94,35 +95,48 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
                     if(calFlag){
                         calFlag = false;
                         UpperDisplayAction(display1);
-                        display2.value = "0";
+                        lastAns = calculatorStack[0];
+                        while(calculatorStack.pop());
+                        display2.value = null;
                     }
-                    console.log(i*boxCell[i].length + j);
                     funcGroup[i*boxCell[i].length + j]();
+                    display2.value = display2.value == "NaN"? null : display2.value;
                     UpperDisplayAction(display1);
                 })
             }
         }
-        funcGroup[0] = () => {
+        funcGroup[0] = () => { // %
+            if(display2.value){
             display2.value = display2.value / 100;
+            } else {display2.value = lastAns / 100;}
         }
-        funcGroup[1] = () => {
+        funcGroup[1] = () => { // 제곱근
+            if(display2.value){
             display2.value = Math.sqrt(display2.value);
+            } else {display2.value = Math.sqrt(lastAns);}
         }
-        funcGroup[2] = () => {
-            display2.value = display2.value*display2.value;
+        funcGroup[2] = () => { // 제곱
+            if(display2.value){
+                display2.value = display2.value*display2.value;
+            } else {display2.value = lastAns*lastAns;}
         }
-        funcGroup[3] = () => {
-            display2.value = display2.value!=0?1/display2.value:display2.value;
+        funcGroup[3] = () => { // 역수
+            if(display2.value){
+                display2.value = display2.value!=0?1/display2.value:display2.value;
+            } else {display2.value = lastAns!=0?1/lastAns:lastAns}
         }
-        funcGroup[4] = () => {
-            display2.value = 0;
+        funcGroup[4] = () => { //비우기
+            display2.value = null;
         }
-        funcGroup[5] = () => {
+        funcGroup[5] = () => { //전체 비우기
             while(calculatorStack.pop());
-            display2.value = 0;
+            display2.value = null;
+            lastAns = null;
         }
-        funcGroup[6] = () => {
-            display2.value = parseFloat(String(display2.value).length===1? 0 : String(display2.value).slice(0,-1));
+        funcGroup[6] = () => { // 지우기
+            if(display2.value){
+            display2.value = String(display2.value).length===1? null : parseFloat(String(display2.value).slice(0,-1));
+            } else {calculatorStack.pop();}
         }
         funcGroup[7] = () => { // 나누기
             calStackPush('/');
@@ -173,8 +187,7 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
             calStackPush('+');
         }
         funcGroup[20] = () => { // +-
-            const a = "-";
-            display2.value = parseFloat(String(display2.value).indexOf(a)===0? String(display2.value).slice(1) : a+display2.value )
+            if(display2.value){display2.value = parseFloat(String(display2.value).indexOf("-")===0? String(display2.value).slice(1) : "-"+display2.value )}
         }
         funcGroup[21] = () => {
             const a = 0;
@@ -188,33 +201,57 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
             display2.value = calculate();
         }
         function calStackPush(a){
-            calculatorStack.push(parseFloat(display2.value));
-            calculatorStack.push(a);
-            display2.value = 0;
+            if(display2.value){ calculatorStack.push(parseFloat(display2.value)); }
+            if(typeof calculatorStack[calculatorStack.length - 1] === "number"){calculatorStack.push(a);}
+            display2.value = null;
         }
         function calculate(){
-            // let answer = parseFloat(display2.value);
-            // let term = "";
-            // display1.value = display1.value + display2.value + " =";
-            // while(calculatorStack.length){
-            //     term = calculatorStack.pop();
-            //     if(term === "+"){
-            //         term = calculatorStack.pop();
-            //         answer += parseFloat(term);
-            //     } else if(term === "-"){
-            //         term = calculatorStack.pop();
-            //         answer = parseFloat(term) - answer;
-            //     } else if(term === "*"){
-            //         term = calculatorStack.pop();
-            //         answer *= parseFloat(term);
-            //     } else if(term === "/"){
-            //         term = calculatorStack.pop();
-            //         console.log(term);
-            //         answer = parseFloat(term) / answer;
-            //     }
-            // }
-            // calFlag = true;
-            // return answer;
+            let term = [];
+            let answer = 0;
+            calculatorStack.push(parseFloat(display2.value));
+            calculatorStack.push("= ");
+            display1.value = "";
+            for(let i = 0; i<calculatorStack.length; i++){
+                display1.value = display1.value + calculatorStack[i] + " ";
+            } 
+            while(calculatorStack.indexOf("*") !== -1 || calculatorStack.indexOf("/") !== -1){
+                let operator = '';
+                if(calculatorStack.indexOf("*") === -1) {operator = "/";}
+                else if(calculatorStack.indexOf("/") === -1) {operator = ("*");}
+                else {operator = calculatorStack.indexOf("*") < calculatorStack.indexOf("/") ? "*" : "/";}
+                term = calculatorStack.slice(calculatorStack.indexOf(operator) - 1,calculatorStack.indexOf(operator)+2);
+                answer = termCal(term);       
+                while(term.pop());
+                calculatorStack.splice(calculatorStack.indexOf(operator) - 1,3,answer);
+                console.log(calculatorStack);
+            }
+            while(calculatorStack.indexOf("+") !== -1 || calculatorStack.indexOf("-") !== -1){
+                let operator = '';
+                if(calculatorStack.indexOf("+") === -1) {operator = ("-")}
+                else if(calculatorStack.indexOf("-") === -1) {operator = ("+")}
+                else {operator = calculatorStack.indexOf("+") < calculatorStack.indexOf("-") ? ("+") : ("-");}
+                term = calculatorStack.slice(calculatorStack.indexOf(operator) - 1,calculatorStack.indexOf(operator)+2);
+                answer = termCal(term);       
+                while(term.pop());
+                calculatorStack.splice(calculatorStack.indexOf(operator) - 1,3,answer);
+                console.log(calculatorStack);
+            }
+            calFlag = true;
+            return calculatorStack[0];
+            function termCal(term){
+                switch (term[1]) {
+                    case '+':
+                        return parseFloat(term[0]) + parseFloat(term[2]);
+                    case '-':
+                        return parseFloat(term[0]) - parseFloat(term[2]);
+                    case '*':
+                        return parseFloat(term[0]) * parseFloat(term[2]);
+                    case '/':
+                        return parseFloat(term[0]) / parseFloat(term[2]);
+                    default:
+                        return false;
+                }
+            }
         }
     }
 }
