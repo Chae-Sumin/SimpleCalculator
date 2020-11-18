@@ -1,6 +1,6 @@
-function calculatorGenerate(id,width,height){ // 계산기 생성 함수
+function calculatorGenerate(id,width,height,style){ // 계산기 생성 함수
     let calFlag = false;
-    let calculatorStack = [];
+    let calculatorStack = ["simpleCalculater"];
     let lastAns = null;
     const box = document.getElementById(id);
     const calForm = document.createElement("form");
@@ -21,13 +21,14 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
     createBtnText(); // table cell 내용 입력
     UpperDisplayAction(display1);
     createBtnFunc();
+    defaultStyle(style);
 //----------------------------------------------------------------
     function createDisplay(){ // input 생성
         const display = document.createElement("input");
         display.setAttribute("type", "text");
         display.setAttribute("class", "scDisplay");
         display.setAttribute("readonly", "readonly");
-        display.value = 0;
+        display.value = null;
         calForm.appendChild(display);
         return display;
     }
@@ -253,6 +254,71 @@ function calculatorGenerate(id,width,height){ // 계산기 생성 함수
                 }
             }
         }
+    }
+    function defaultStyle(style){
+        if(style){
+            let form = box.getElementsByTagName("form")[0];
+            let table = form.getElementsByTagName("table")[0];
+            form.style.width = "100%";
+            form.style.height = "100%";
+            form.style.background = "#ccc";
+            form.style.padding = "10px"
+            form.style.boxSizing = "border-box";
+            display1.style.width = "100%";
+            display1.style.height = "36px";
+            display1.style.background = "#000";
+            display1.style.color = "#fff";
+            display1.style.margin = "0";
+            display1.style.textAlign = "right";
+            display1.style.fontSize = "16px";
+            display1.style.boxSizing = "border-box";
+            display1.style.border = "none";
+            display1.style.padding = "0 20px";
+            display2.style.width = "100%";
+            display2.style.height = "40px";
+            display2.style.background = "#000";
+            display2.style.color = "#fff";
+            display2.style.margin = "0";
+            display2.style.textAlign = "right";
+            display2.style.fontSize = "20px";
+            display2.style.boxSizing = "border-box";
+            display2.style.border = "none";
+            display2.style.padding = "0 20px";
+            table.style.width = "100%";
+            table.style.height = "calc(100% - 90px)";
+            table.style.padding = "10px 0 0 0";
+            table.style.tableLayout = "fixed";
+            for(let i = 0, j = 0; i < boxCell.length; i++){
+                console.log(boxCell[i][j].children[0]);
+                switch (j) {
+                    case 0:
+                        boxCell[i][j].children[0].style.width = "100%";
+                        boxCell[i][j].children[0].style.height = "100%";
+                        boxCell[i][j].children[0].style.border = "none";
+                        boxCell[i][j].children[0].style.background = "#eee";                        
+                        j++;
+                    case 1:
+                        boxCell[i][j].children[0].style.width = "100%";
+                        boxCell[i][j].children[0].style.height = "100%";
+                        boxCell[i][j].children[0].style.border = "none";
+                        boxCell[i][j].children[0].style.background = "#eee";                        
+                        j++;
+                    case 2:
+                        boxCell[i][j].children[0].style.width = "100%";
+                        boxCell[i][j].children[0].style.height = "100%";
+                        boxCell[i][j].children[0].style.border = "none";
+                        boxCell[i][j].children[0].style.background = "#eee";                        
+                        j++;
+                    case 3:
+                        boxCell[i][j].children[0].style.width = "100%";
+                        boxCell[i][j].children[0].style.height = "100%";
+                        boxCell[i][j].children[0].style.border = "none";
+                        boxCell[i][j].children[0].style.background = "#eee";                        
+                        j = 0;
+                }
+            }
+        } else return false;
+        createCellThema(id,'#fff',[8,9,10,12,13,14,16,17,18,21]);
     }
 }
 //------------------------------------------------------------------------------

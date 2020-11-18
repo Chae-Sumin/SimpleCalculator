@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="./SimpleCalculator.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* if you want defaultStyle into a css, copy and paste in your css and false the last parameter in the calculatorGenerate*/
+        /* #SimpleCalculator *{margin: 0; padding: 0; border: 0;}
+        #SimpleCalculator>form{width: 100%; height: 100%; background: #ccc; padding: 10px; box-sizing: border-box;}
+        #SimpleCalculator>form>input{width: 100%; height: 40px; padding: 5px 20px; background: #000; color: #fff; box-sizing: border-box; line-height: 30px; text-align: right; font-size: 20px;}
+        #SimpleCalculator>form>input:first-of-type{height: 36px; font-size: 16px; line-height: 26px;}
+        #SimpleCalculator>form>table{width: 100%; height: calc(100% - 90px); padding-top: 10px; border-spacing: 5px; table-layout: fixed;}
+        #SimpleCalculator>form>table button{width: 100%; height: 100%; background: #eee;} */
+    </style>
 </head>
 <body>
     <div id="SimpleCalculator"></div>
     <script>
-    calculatorGenerate("SimpleCalculator",300,400);
-    createCellThema("SimpleCalculator",'#fff',[8,9,10,12,13,14,16,17,18,21])
+        calculatorGenerate("SimpleCalculator",300,400,true);
     </script>
 </body>
 </html>
