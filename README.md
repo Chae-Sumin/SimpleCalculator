@@ -7,17 +7,20 @@
   Call the function in window.onload or after the box you want to use as a calculator.
 
     ```javascript 
-    calculatorGenerate("ID",width,height);
+    calculatorGenerate("ID",width,height,defaultStyle);
+    ex) calculatorGenerate("SimpleCalculator",300,400,true);
     ```
     >* "ID" is the ID of the box you want to be a calculator
     >* width and height are the desired calculator size, can only be entered in numbers and are calculated in px   
     >If the value is empty, a calculator that fits the size of the box is automatically created.
-
+    >* If you want a basic style without a separate css, value defaultStyle as true.
+    
 3. hange the design of the button
   Call the function in window.onload or after the box you want to use as a calculator.
     
     ```javascript 
     createCellThema("ID","background style",button key);
+    ex) createCellThema("SimpleCalculator",'#fff',[8,9,10,12,13,14,16,17,18,21]);
     ```
     >* "ID" is the ID of the box you want to be a calculator
     >* "background style" is written in a format that enters the background property of css   
